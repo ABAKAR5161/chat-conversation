@@ -10,4 +10,8 @@ export async function getUsers(req, res) {
         return res.status(500).json({ message: "Internal Server Error" });
         
     }
-}
+};
+
+export const checkAuth = async (req, res) => {
+    return res.status(200).json({ authUser: req.user });
+};
