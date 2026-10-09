@@ -4,7 +4,7 @@ config();
 
 const generateToken = (userId, res) => {
     // Create token
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET || "my_scret",
+    const token = jwt.sign({ userId }, process.env.JWT_SECRET,
         {
             expiresIn: 60 * 60 * 24 * 15 // 15 days before expired
         }

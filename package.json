@@ -4,7 +4,9 @@
   "description": "",
   "main": "./backend/src/server.js",
   "scripts": {
-    "nodemon": "nodemon ./backend/src/server.js"
+    "nodemon": "nodemon backend/src/server.js",
+    "start": "node backend/src/server.js",
+    "build": "npm run build --prefix frontend"
   },
   "keywords": [],
   "author": "",

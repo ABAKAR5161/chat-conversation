@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useStoreUser from "../../store/useUsers";
-import Conversation from "./conversation";
+import Conversation from "./Conversation";
 
 
 
