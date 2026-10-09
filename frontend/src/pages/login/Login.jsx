@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router";
+import useStoreAuth from "../../store/useAuth";
 
 const Login = () => {
     const [data, setData] = useState({
-        userName: "",
+        email: "",
         password: "",
     });
     const [errors, setErrors] = useState({});
+    const { login, isLoadingLogin } = useStoreAuth();
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -19,27 +21,39 @@ const Login = () => {
             [name]: "",
         }));
     };
+   
+    
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const nextErrors = {};
-        if (!data.userName.trim()) {
-            nextErrors.userName = "Le nom d'utilisateur est obligatoire.";
-        }
+        if (!data.email.trim()) {
+            nextErrors.email = "Email est obligatoire.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
+            nextErrors.email = "Saisissez une adresse email valide.";
+        };
         if (!data.password) {
             nextErrors.password = "Le mot de passe est obligatoire.";
         } else if (data.password.length < 8) {
             nextErrors.password = "Le mot de passe doit contenir au moins 8 caractères.";
-        }
+        };
 
         setErrors(nextErrors);
         if (Object.keys(nextErrors).length > 0) return;
-        setData({
-            userName: "",
-            password: "",
-        });
-        console.log("Login payload:", data);
+        try {
+            await login(data);
+            setData({
+                email: "",
+                password: "",
+            });
+        } catch (error) {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                login: error.response?.data?.message
+                    || "Échec de se connecter. Réessayez."
+            }));
+        }
     };
 
     return (
@@ -51,21 +65,21 @@ const Login = () => {
                 </h1>
                 <form onSubmit={handleSubmit} noValidate>
                     <div>
-                        <label className="label p-2" htmlFor="username">
-                            <span className="text-base label-text">UserName</span>
+                        <label className="label p-2" htmlFor="email">
+                            <span className="text-base label-text">Email</span>
                         </label>
                         <input
-                            id="username"
-                            name="userName"
+                            id="email"
+                            name="email"
                             onChange={handleChange}
-                            value={data.userName}
-                            type="text"
-                            placeholder="Enter your Username"
+                            value={data.email}
+                            type="email"
+                            placeholder="Enter your email"
                             className="w-full input input-bordered h-10"
-                            aria-invalid={Boolean(errors.userName)}
-                            aria-describedby={errors.userName ? "username-error" : undefined}
+                            aria-invalid={Boolean(errors.email)}
+                            aria-describedby={errors.email ? "email-error" : undefined}
                         />
-                        {errors?.userName && <p id="username-error" className="py-1 text-sm text-orange-900 font-semibold">{errors.userName}</p>}
+                        {errors?.email && <p id="email-error" className="py-1 text-sm text-orange-900 font-semibold">{errors.email}</p>}
                     </div>
                     <div>
                         <label className="label" htmlFor="password">
@@ -87,8 +101,9 @@ const Login = () => {
                     </div>
 
                     <div>
-                        <button type="submit" className="btn btn-block btn-sm mt-2">
-                            Login
+                        {errors?.login && (<p role="alert" className="py-1 text-sm font-semibold text-orange-900">{errors.login}</p>)}
+                        <button type="submit" disabled={isLoadingLogin} className="btn btn-block btn-sm mt-2">
+                            {isLoadingLogin ? "Connexion..." : "Login"}
                         </button>
                     </div>
                     <div className="flex items-center justify-end">

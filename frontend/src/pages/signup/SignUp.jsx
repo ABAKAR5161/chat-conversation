@@ -1,6 +1,7 @@
 import { useState } from "react";
 import GenderCheckBox from "./GenderCheckBox";
 import { Link } from "react-router";
+import useStoreAuth from "../../store/useAuth";
 
 const SignUp = () => {
     const [data, setData] = useState({
@@ -12,6 +13,9 @@ const SignUp = () => {
         gender: "",
     });
     const [errors, setErrors] = useState({});
+    const { signup, isLoadingSignup } = useStoreAuth();
+
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -22,10 +26,11 @@ const SignUp = () => {
         setErrors((prevErrors) => ({
             ...prevErrors,
             [name]: "",
+            submit: "",
         }));
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         let nextErrors = {};
@@ -37,11 +42,12 @@ const SignUp = () => {
         }
         if (!data.email.toLowerCase().trim()) {
             nextErrors.email = "Email est obligatoire"
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
+            nextErrors.email = "Saisissez une adresse email valide."
         }
         if (!data.password) {
             nextErrors.password = "Le mot de passe est obligatoire"
-        }
-         if (data.password.length < 8) {
+        } else if (data.password.length < 8) {
             nextErrors.password = "Le mot de passe  doit contenir au moins 8 caractères"
         }
 
@@ -61,15 +67,25 @@ const SignUp = () => {
        
         
 
-        console.log("Signup Payload:", data);
-        setData({
-            fullName: "",
-            userName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            gender: "",
-        });
+        try {
+            await signup(data);
+            setData({
+                fullName: "",
+                userName: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+                gender: "",
+            });
+            
+        } catch (error) {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                submit: error.response?.data?.message
+                    || error.response?.data?.error
+                    || "Échec de l'inscription. Réessayez.",
+            }));
+        }
         
     };
 
@@ -143,7 +159,10 @@ const SignUp = () => {
                     </Link>
 
                     <div>
-                        <button type="submit" className="btn btn-block btn-sm mt-2 border border-slate-700">Sign Up</button>
+                        {errors.submit && <p role="alert" className="py-1 text-sm font-semibold text-orange-900">{errors.submit}</p>}
+                        <button type="submit" disabled={isLoadingSignup} className="btn btn-block btn-sm mt-2 border border-slate-700">
+                            {isLoadingSignup ? "Creating account..." : "Sign Up"}
+                        </button>
                     </div>
                 </form>
             </div>

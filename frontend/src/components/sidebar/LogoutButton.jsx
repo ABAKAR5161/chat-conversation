@@ -1,10 +1,16 @@
 
 import { BiLogOut } from "react-icons/bi";
+import useStoreAuth from "../../store/useAuth";
 const LogoutButton = () => {
+  const { logout } = useStoreAuth();
+
+  const handleLogout = () => {
+    logout()
+  }
   return (
-    <div className="mt-auto">
+    <button onClick={handleLogout} className="mt-auto">
       <BiLogOut className="h-6 w-6 text-white cursor-pointer" />
-    </div>
+    </button>
   )
 }
 

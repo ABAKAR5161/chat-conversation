@@ -1,20 +1,35 @@
 import { Routes, Route } from "react-router";
+import { useEffect } from "react";
 
 import './App.css'
 import Home from './pages/home/Home';
-import { useState } from "react";
-import SignUp from "./pages/signup/SignUp";
+import SignUp from "./pages/signup/signUp";
 import Login from "./pages/login/Login";
+import useStoreAuth from "./store/useAuth";
+
 
 function App() {
-  const [checkAuth, setCheckAuth] = useState(false);
+  const { authUser, checkAuth, isCheckingAuth } = useStoreAuth();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  if (isCheckingAuth) {
+    return (
+      <div className="p-4 h-screen flex items-center justify-center" role="status">
+        Vérification de la session...
+      </div>
+    );
+  }
+
   return (
     <div
       className='p-4 h-screen flex items-center justify-center'>
       <Routes>
-        <Route path='/' element={checkAuth ? <Home /> : <Login />} />
-        <Route path="/signup" element={!checkAuth ? <SignUp /> : <Home /> } />
-        <Route path="/login" element={!checkAuth ? <Login /> : <Home />} />
+        <Route path='/' element={authUser ? <Home /> : <Login />} />
+        <Route path="/signup" element={!authUser ? <SignUp /> : <Home /> } />
+        <Route path="/login" element={!authUser ? <Login /> : <Home />} />
       </Routes>
     </div>
    

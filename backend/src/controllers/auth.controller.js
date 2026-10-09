@@ -4,13 +4,25 @@ import { config } from "dotenv";
 import User from "../models/auth.model.js";
 config();
 
+const formatAuthUser = (user) => ({
+    _id: user._id,
+    userName: user.userName,
+    fullName: user.fullName,
+    email: user.email,
+    gender: user.gender,
+});
+
 export const signup = async (req, res) => {
     try {
-        const { userName, fullName, email, password, confirmPassword } = req.body;
+        const { userName, fullName, email, password, confirmPassword, gender } = req.body;
 
-        if (!userName || !fullName || !email || !password || !confirmPassword) {
+        if (!userName || !fullName || !email || !password || !confirmPassword || !gender) {
             return res.status(400).json({ message: "All filts must be required." });
         };
+
+        if (!["male", "female"].includes(gender)) {
+            return res.status(400).json({ message: "Gender must be male or female." });
+        }
         
         if (password.length < 8 || password !== confirmPassword) {
             return res.status(400).json({ message: "Password must be at least 8 characters and confirmPassword must match password" });
@@ -32,10 +44,14 @@ export const signup = async (req, res) => {
             email: cleanEmail,
             password: isHashPassword,
             confirmPassword: isHashConfirmPassword,
+            gender,
         });
         await newUser.save();
         generateToken(newUser._id, res);
-        return res.status(200).json({ message: "User signup successfull!" });
+        return res.status(201).json({
+            message: "User signup successfull!",
+            authUser: formatAuthUser(newUser),
+        });
 
     } catch (error) {
         console.log("Error in signup controller", error);
@@ -64,7 +80,10 @@ export const logging = async (req, res) => {
             return res.status(400).json({ message: "Credential Error" });
         }
         generateToken(existingUser._id, res);
-        return res.status(200).json({ message: "User loging success!" });
+        return res.status(200).json({
+            message: "User loging success!",
+            authUser: formatAuthUser(existingUser),
+        });
     } catch (error) {
         console.log("Error in loging controller", error);
         return res.status(500).json({ error: "Internal Server Error" });
