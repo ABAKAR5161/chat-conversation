@@ -5,7 +5,7 @@ import User from "../models/auth.model.js";
 
 config();
 
-export async function protectRoute(req, res, next) {
+async function authenticate(req, res, next, allowUnauthenticated) {
     try {
         let token = req.cookies?.jwt;
 
@@ -15,6 +15,10 @@ export async function protectRoute(req, res, next) {
         }
 
         if (!token) {
+            if (allowUnauthenticated) {
+                req.user = null;
+                return next();
+            }
             return res.status(401).json({ message: "Unauthorized - No token provided" });
         }
 
@@ -22,6 +26,10 @@ export async function protectRoute(req, res, next) {
         const user = await User.findById(decoded.userId).select("-password");
 
         if (!user) {
+            if (allowUnauthenticated) {
+                req.user = null;
+                return next();
+            }
             return res.status(404).json({ message: "User not found" });
         }
 
@@ -29,10 +37,22 @@ export async function protectRoute(req, res, next) {
         return next();
     } catch (error) {
         if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
+            if (allowUnauthenticated) {
+                req.user = null;
+                return next();
+            }
             return res.status(401).json({ message: "Unauthorized - Invalid or Expired Token " });
         }
 
         console.log("Error in protectRoute middleware", error);
         return res.status(500).json({ message: "Internal Server Error" });
     }
+}
+
+export function protectRoute(req, res, next) {
+    return authenticate(req, res, next, false);
+}
+
+export function optionalProtectRoute(req, res, next) {
+    return authenticate(req, res, next, true);
 }

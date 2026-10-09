@@ -77,7 +77,7 @@ export const logging = async (req, res) => {
         }
         const isValidPassword = await bcrypt.compare(password, existingUser.password);
         if (!isValidPassword) {
-            return res.status(400).json({ message: "Credential Error" });
+            return res.status(200).json({ message: "Credential Error" });
         }
         generateToken(existingUser._id, res);
         return res.status(200).json({

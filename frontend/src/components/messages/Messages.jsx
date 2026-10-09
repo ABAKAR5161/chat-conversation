@@ -3,16 +3,7 @@ import Message from "./Message"
 
 const Messages = () => {
   return (
-    <div className="px-4  flex-col overflow-auto">
-      <Message />
-      <Message />
-      <Message />
-      <Message />
-      <Message />
-      <Message />
-      <Message />
-      <Message />
-      <Message />
+    <div className="px-4 h-full flex-col overflow-auto">
       <Message />
     </div>
   );

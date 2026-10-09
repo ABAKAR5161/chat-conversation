@@ -1,17 +1,24 @@
-import Conversation from "./conversation"
+import { useEffect } from "react";
+import useStoreUser from "../../store/useUsers";
+import Conversation from "./conversation";
+
 
 
 const Conversations = () => {
+  const { users, isLoadingUsers, getUsers } = useStoreUser();
+
+
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
+    
   return (
-    <div  className="flex flex-col overflow-auto py-2">
-          <Conversation />
-          <Conversation />
-          <Conversation />
-          <Conversation />
-          <Conversation />
-          <Conversation />
-    </div>
-  )
-}
+    isLoadingUsers ? (<div> Loading...</div >) : (
+      <div className="flex flex-col overflow-auto py-2">
+        {users?.map((user) => <Conversation key={user._id} user={user} />)}
+      </div>
+    )
+  );
+};
 
 export default Conversations

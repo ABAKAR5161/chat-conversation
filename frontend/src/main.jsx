@@ -4,11 +4,15 @@ import { BrowserRouter } from "react-router";
 
 import './index.css'
 import App from './App.jsx'
+import { SocketContextProvider } from './context/socketContextProvider.jsx';
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <SocketContextProvider>
+        <App />
+      </SocketContextProvider>
     </BrowserRouter>
   </StrictMode>,
 );

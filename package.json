@@ -4,7 +4,7 @@
   "description": "",
   "main": "./backend/src/server.js",
   "scripts": {
-    "nodemon": "node ./backend/src/server.js"
+    "nodemon": "nodemon ./backend/src/server.js"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.1",
     "nodemon": "^3.1.14",
+    "socket.io": "^4.8.4",
     "vite": "^8.3.0"
   }
 }
