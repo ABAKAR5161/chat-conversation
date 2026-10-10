@@ -17,21 +17,20 @@ function App() {
 
   if (isCheckingAuth) {
     return (
-      <div className="p-4 h-screen flex items-center justify-center" role="status">
+      <div className="flex min-h-[100dvh] items-center justify-center p-4" role="status">
         Vérification de la session...
       </div>
     );
   }
 
   return (
-    <div
-      className='p-4 h-screen flex items-center justify-center'>
+    <main className="flex min-h-[100dvh] w-full items-center justify-center p-0 sm:p-4">
       <Routes>
         <Route path='/' element={authUser ? <Home /> : <Login />} />
         <Route path="/signup" element={!authUser ? <SignUp /> : <Home /> } />
         <Route path="/login" element={!authUser ? <Login /> : <Home />} />
       </Routes>
-    </div>
+    </main>
    
   );
 }

@@ -1,10 +1,9 @@
 import MessageContainer from "../../components/messages/MessageContainer"
 import Sidebar from "../../components/sidebar/Sidebar"
 
-
 const Home = () => {
   return (
-    <div className="flex sm:h-[450px] md:h-[550px] rounded-lg overflow-auto bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0">
+    <div className="flex h-[100dvh] w-full min-w-0 overflow-hidden bg-gray-400 bg-clip-padding bg-opacity-0 backdrop-blur-lg sm:h-[min(80dvh,700px)] sm:max-w-6xl sm:rounded-lg">
       <Sidebar />
       <MessageContainer />
     </div>

@@ -46,14 +46,14 @@ const MessageInput = () => {
  
   return (
     <form
-      onSubmit={handleSubmit} className="px-4 mb-1  my-auto">
-      <div className="relative  w-full">
+      onSubmit={handleSubmit} className="shrink-0 px-3 pb-2 pt-1 sm:px-4">
+      <div className="relative w-full">
         <input
           onChange={handleChange}
           value={message}
           name="message"
           type="text"
-          className="input rounded-lg  text-sm w-full block p-2.5 bg-gray-700 border-gray-500 text-white"
+          className="input block w-full rounded-lg border-gray-500 bg-gray-700 p-2.5 pe-11 text-sm text-white"
           placeholder="Send a message"
         />
         {error?.message && <p id="message-error" className="py-1 text-sm text-orange-900 font-semibold">{error.message}</p>}

@@ -90,9 +90,9 @@ const SignUp = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
-            <div className="w-full p-6 bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0">
-                <h1 className="text-3xl font-semibold text-gray-300">
+        <div className="mx-auto flex w-full min-w-0 max-w-md flex-col items-center justify-center">
+            <div className="w-full rounded-lg bg-gray-400 bg-clip-padding p-4 shadow-md backdrop-blur-lg bg-opacity-0 sm:p-6">
+                <h1 className="text-center text-2xl font-semibold text-gray-300 sm:text-left sm:text-3xl">
                     Sign Up <span className="text-blue-500"> ChatApp</span>
                 </h1>
                 <form onSubmit={handleSubmit}>

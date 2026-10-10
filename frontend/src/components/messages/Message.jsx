@@ -50,7 +50,7 @@ const Message = () => {
                                 />
                             </div>
                         </div>
-                        <div className={`chat-bubble  ${!isCurrentUserMessage && "bg-sky-500"}`}>{message.message}</div>
+                        <div className={`chat-bubble max-w-[85%] break-words [overflow-wrap:anywhere] sm:max-w-[75%] ${!isCurrentUserMessage ? "bg-sky-500" : ""}`}>{message.message}</div>
                         <div className="chat-footer opacity-50">Delivered</div>
                     </div>
                 );
